@@ -7,6 +7,9 @@ load_dotenv()
 
 app = Flask(__name__)
 
+# Get the API key from environment variable
+API_KEY = os.getenv('OPENWEATHER_API_KEY')
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -16,8 +19,7 @@ def weather():
     if request.method == 'POST':
         city = request.form.get('city')
         if city:
-            api_key = 'your_api_key'
-            url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric'
+            url = f'http://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_KEY}&units=metric'
             response = requests.get(url)
 
             if response.status_code == 200:
@@ -29,4 +31,5 @@ def weather():
     return redirect(url_for('index'))
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    port = int(os.getenv('PORT', 8000))
+    app.run(host='0.0.0.0', port=port)
